@@ -1,0 +1,445 @@
+{
+  "dangerous_commands": [
+    {
+      "pattern": "rm\\s+-rf\\s+/",
+      "description": "Deletes the entire root filesystem recursively.",
+      "severity": "CRITICAL"
+    },
+    {
+      "pattern": "rm\\s+-rf\\s+~",
+      "description": "Deletes your entire home directory recursively.",
+      "severity": "CRITICAL"
+    },
+    {
+      "pattern": "rm\\s+-rf\\s+\\*",
+      "description": "Deletes all files in current directory recursively.",
+      "severity": "HIGH"
+    },
+    {
+      "pattern": "chmod\\s+777\\s+",
+      "description": "Grants full read/write/execute access to all users — a serious security risk.",
+      "severity": "HIGH"
+    },
+    {
+      "pattern": "dd\\s+if=.*of=/dev/",
+      "description": "Writes raw data directly to a disk device — can corrupt or wipe drives.",
+      "severity": "CRITICAL"
+    },
+    {
+      "pattern": "mkfs\\.",
+      "description": "Formats a filesystem — will permanently erase all data on the target partition.",
+      "severity": "CRITICAL"
+    },
+    {
+      "pattern": ":.*\\(\\).*\\{.*:.*\\|.*:.*&.*\\}.*:",
+      "description": "Fork bomb detected — will crash your system by exhausting process resources.",
+      "severity": "CRITICAL"
+    },
+    {
+      "pattern": "wget.*\\|.*sh",
+      "description": "Downloads and executes a remote script without inspection — very risky.",
+      "severity": "HIGH"
+    },
+    {
+      "pattern": "curl.*\\|.*sh",
+      "description": "Downloads and executes a remote script without inspection — very risky.",
+      "severity": "HIGH"
+    },
+    {
+      "pattern": "sudo\\s+su\\s*$",
+      "description": "Switches to full root shell — escalates all privileges.",
+      "severity": "MEDIUM"
+    }
+  ],
+  "known_commands": [
+    "ls",
+    "cd",
+    "pwd",
+    "mkdir",
+    "rmdir",
+    "cp",
+    "mv",
+    "rm",
+    "touch",
+    "cat",
+    "grep",
+    "find",
+    "chmod",
+    "chown",
+    "ps",
+    "kill",
+    "top",
+    "htop",
+    "df",
+    "du",
+    "tar",
+    "zip",
+    "unzip",
+    "ssh",
+    "scp",
+    "curl",
+    "wget",
+    "ping",
+    "netstat",
+    "ifconfig",
+    "ip",
+    "iptables",
+    "nmap",
+    "gobuster",
+    "ffuf",
+    "nikto",
+    "sqlmap",
+    "hydra",
+    "metasploit",
+    "msfconsole",
+    "burpsuite",
+    "john",
+    "hashcat",
+    "aircrack-ng",
+    "tcpdump",
+    "wireshark",
+    "nc",
+    "netcat",
+    "python",
+    "python3",
+    "pip",
+    "pip3",
+    "git",
+    "docker",
+    "kubectl",
+    "ansible",
+    "terraform",
+    "vim",
+    "nano",
+    "echo",
+    "export",
+    "source",
+    "sudo",
+    "su",
+    "apt",
+    "apt-get",
+    "yum",
+    "dnf",
+    "systemctl",
+    "journalctl",
+    "crontab",
+    "env",
+    "set",
+    "unset",
+    "history",
+    "man",
+    "whois",
+    "dig",
+    "nslookup",
+    "traceroute",
+    "route",
+    "arp",
+    "lsof",
+    "strace",
+    "ltrace",
+    "gdb",
+    "objdump",
+    "strings",
+    "file",
+    "xxd",
+    "base64",
+    "openssl",
+    "gpg",
+    "ssh-keygen",
+    "chmod",
+    "umask"
+  ],
+  "typo_corrections": {
+    "sl": "ls",
+    "ls -al": "ls -la",
+    "gerp": "grep",
+    "grpe": "grep",
+    "gut": "git",
+    "gti": "git",
+    "cd..": "cd ..",
+    "pyhton": "python",
+    "pyhton3": "python3",
+    "pythno": "python",
+    "suod": "sudo",
+    "sduo": "sudo",
+    "cta": "cat",
+    "maek": "make",
+    "mkae": "make",
+    "namp": "nmap",
+    "nmpa": "nmap"
+  },
+  "pentest_suggestions": {
+    "nmap": [
+      {
+        "condition": "port_80_open",
+        "keywords": [
+          "80/tcp",
+          "80/open",
+          "http"
+        ],
+        "suggestion": "HTTP detected on port 80 → Run directory brute-force",
+        "command": "gobuster dir -u http://{target} -w /usr/share/wordlists/dirb/common.txt"
+      },
+      {
+        "condition": "port_443_open",
+        "keywords": [
+          "443/tcp",
+          "443/open",
+          "https"
+        ],
+        "suggestion": "HTTPS detected on port 443 → Run web vulnerability scan",
+        "command": "nikto -h https://{target}"
+      },
+      {
+        "condition": "port_22_open",
+        "keywords": [
+          "22/tcp",
+          "22/open",
+          "ssh"
+        ],
+        "suggestion": "SSH detected on port 22 → Try credential brute-force",
+        "command": "hydra -L users.txt -P /usr/share/wordlists/rockyou.txt {target} ssh"
+      },
+      {
+        "condition": "port_21_open",
+        "keywords": [
+          "21/tcp",
+          "21/open",
+          "ftp"
+        ],
+        "suggestion": "FTP detected on port 21 → Check for anonymous login",
+        "command": "ftp {target}   # try: anonymous / anonymous"
+      },
+      {
+        "condition": "port_3306_open",
+        "keywords": [
+          "3306/tcp",
+          "3306/open",
+          "mysql"
+        ],
+        "suggestion": "MySQL detected on port 3306 → Try default credentials",
+        "command": "mysql -h {target} -u root -p"
+      },
+      {
+        "condition": "port_445_open",
+        "keywords": [
+          "445/tcp",
+          "445/open",
+          "smb",
+          "microsoft-ds"
+        ],
+        "suggestion": "SMB detected on port 445 → Enumerate shares",
+        "command": "smbclient -L //{target} -N"
+      }
+    ],
+    "gobuster": [
+      {
+        "condition": "found_admin",
+        "keywords": [
+          "/admin",
+          "/administrator",
+          "/wp-admin"
+        ],
+        "suggestion": "Admin panel found → Try default credentials or brute-force login",
+        "command": "hydra -L users.txt -P passwords.txt {target} http-post-form '/admin/login:user=^USER^&pass=^PASS^:Invalid'"
+      },
+      {
+        "condition": "found_login",
+        "keywords": [
+          "/login",
+          "/signin",
+          "/auth"
+        ],
+        "suggestion": "Login page found → Test for SQL injection",
+        "command": "sqlmap -u 'http://{target}/login' --forms --batch --dbs"
+      },
+      {
+        "condition": "found_api",
+        "keywords": [
+          "/api",
+          "/v1",
+          "/v2",
+          "/rest"
+        ],
+        "suggestion": "API endpoint found → Enumerate API methods and parameters",
+        "command": "ffuf -u http://{target}/api/FUZZ -w /usr/share/wordlists/api_wordlist.txt"
+      }
+    ],
+    "ffuf": [
+      {
+        "condition": "found_parameter",
+        "keywords": [
+          "200",
+          "301",
+          "302"
+        ],
+        "suggestion": "Live endpoints found → Test for LFI/RFI or SSRF vulnerabilities",
+        "command": "ffuf -u 'http://{target}/page?file=FUZZ' -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt"
+      }
+    ],
+    "nikto": [
+      {
+        "condition": "found_vuln",
+        "keywords": [
+          "OSVDB",
+          "CVE",
+          "vulnerable"
+        ],
+        "suggestion": "Vulnerabilities detected → Search for exploit on Exploit-DB",
+        "command": "searchsploit {cve_or_software}"
+      }
+    ],
+    "sqlmap": [
+      {
+        "condition": "db_found",
+        "keywords": [
+          "available databases",
+          "database:"
+        ],
+        "suggestion": "Database found → Enumerate tables and dump credentials",
+        "command": "sqlmap -u '{url}' -D {dbname} --tables --dump"
+      }
+    ]
+  },
+  "command_explanations": {
+    "nmap": {
+      "description": "Network Mapper — discovers hosts and services on a network.",
+      "flags": {
+        "-sS": "SYN scan (stealth) — half-open scan, less likely to be logged",
+        "-sV": "Version detection — probes open ports to determine service version",
+        "-sC": "Default scripts — runs NSE scripts equivalent to --script=default",
+        "-A": "Aggressive scan — enables OS detection, version detection, script scanning, traceroute",
+        "-p": "Port range — e.g. -p 1-1000 or -p 80,443",
+        "-oN": "Output to normal text file",
+        "-oX": "Output to XML file",
+        "-T4": "Timing template 4 (fast) — increases scan speed",
+        "-Pn": "Skip host discovery — treat all hosts as online",
+        "--open": "Show only open ports"
+      },
+      "risks": "Unauthorized scanning may be illegal. Only scan systems you own or have written permission to test."
+    },
+    "gobuster": {
+      "description": "Directory/file brute-forcer for web servers using wordlists.",
+      "flags": {
+        "dir": "Directory enumeration mode",
+        "-u": "Target URL",
+        "-w": "Wordlist path",
+        "-t": "Number of threads (default 10)",
+        "-x": "File extensions to search for (e.g. php,html,txt)",
+        "-o": "Output file",
+        "-b": "Blacklist status codes (e.g. 404,403)",
+        "-k": "Skip TLS certificate verification"
+      },
+      "risks": "Can trigger IDS/IPS alerts. High thread counts may crash unstable web servers."
+    },
+    "ffuf": {
+      "description": "Fast web fuzzer for discovering hidden files, directories, parameters, and vhosts.",
+      "flags": {
+        "-u": "Target URL (use FUZZ as placeholder)",
+        "-w": "Wordlist path",
+        "-H": "Add custom header",
+        "-mc": "Match HTTP status codes",
+        "-fc": "Filter out status codes",
+        "-fs": "Filter by response size",
+        "-t": "Number of threads"
+      },
+      "risks": "High-speed fuzzing may cause DoS on target. Always get authorization first."
+    },
+    "nikto": {
+      "description": "Web server vulnerability scanner — checks for dangerous files, outdated software, misconfigurations.",
+      "flags": {
+        "-h": "Target host or IP",
+        "-p": "Target port",
+        "-ssl": "Force SSL mode",
+        "-o": "Output file",
+        "-Format": "Output format (txt, html, xml, csv)",
+        "-Tuning": "Scan tuning to focus on specific vulnerability types"
+      },
+      "risks": "Very noisy — easily detected by IDS. Produces clear log entries on the target."
+    },
+    "sqlmap": {
+      "description": "Automated SQL injection detection and exploitation tool.",
+      "flags": {
+        "-u": "Target URL",
+        "--forms": "Automatically parse and test forms on the page",
+        "--dbs": "Enumerate databases",
+        "--tables": "Enumerate tables in a database",
+        "--dump": "Dump table contents",
+        "--batch": "Non-interactive mode (use defaults)",
+        "-D": "Specify database name",
+        "-T": "Specify table name",
+        "--level": "Test level 1-5 (5 = most thorough)",
+        "--risk": "Risk level 1-3"
+      },
+      "risks": "Can cause data corruption or trigger WAF blocks. Never run against production databases without authorization."
+    },
+    "hydra": {
+      "description": "Fast network login cracker supporting many protocols.",
+      "flags": {
+        "-l": "Single username",
+        "-L": "Username list file",
+        "-p": "Single password",
+        "-P": "Password list file",
+        "-t": "Number of parallel tasks",
+        "-V": "Verbose — show each attempt",
+        "-f": "Stop after first valid credential found",
+        "-o": "Output file"
+      },
+      "risks": "Account lockouts, IDS alerts. Brute-forcing without permission is illegal."
+    },
+    "ls": {
+      "description": "Lists directory contents.",
+      "flags": {
+        "-l": "Long format — shows permissions, owner, size, date",
+        "-a": "Show hidden files (starting with .)",
+        "-h": "Human-readable file sizes",
+        "-R": "Recursive listing",
+        "-t": "Sort by modification time",
+        "-S": "Sort by file size"
+      },
+      "risks": "None."
+    },
+    "chmod": {
+      "description": "Changes file permissions.",
+      "flags": {
+        "644": "rw for owner, r for group/others — common for files",
+        "755": "rwx for owner, rx for group/others — common for executables",
+        "777": "Full rwx for owner, group, and others — avoid in production",
+        "+x": "Add execute permission",
+        "-x": "Remove execute permission",
+        "-R": "Apply recursively to directory"
+      },
+      "risks": "Setting 777 on sensitive files is a major security vulnerability."
+    },
+    "ssh": {
+      "description": "Secure Shell — encrypted remote login protocol.",
+      "flags": {
+        "-i": "Identity file (private key)",
+        "-p": "Port (default 22)",
+        "-L": "Local port forwarding",
+        "-R": "Remote port forwarding",
+        "-D": "Dynamic SOCKS proxy",
+        "-N": "No remote command — useful for tunnels only",
+        "-v": "Verbose output for debugging"
+      },
+      "risks": "Keep private keys secure. Never share or expose private key files."
+    },
+    "netcat": {
+      "description": "Network utility for reading/writing data across TCP/UDP connections.",
+      "flags": {
+        "-l": "Listen mode",
+        "-p": "Port number",
+        "-v": "Verbose",
+        "-e": "Execute program after connect (use with caution)",
+        "-n": "Skip DNS resolution",
+        "-z": "Zero-I/O mode — port scanning"
+      },
+      "risks": "-e flag creates a reverse shell if used carelessly. Handle with care."
+    },
+    "nc": {
+      "description": "Alias for netcat. See 'explain netcat'.",
+      "flags": {},
+      "risks": "Same as netcat."
+    }
+  }
+}

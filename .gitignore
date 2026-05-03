@@ -1,0 +1,17 @@
+# Hazel CLI — Git Ignore
+
+# NEVER commit API keys
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# Hazel runtime files
+hazel.db
+hazel_config.json
+writeup_*.md
+*.log

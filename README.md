@@ -95,7 +95,7 @@ hazel-cli/
 
 ```bash
 # Option A: Clone from GitHub
-git clone https://github.com/yourname/hazel-cli.git
+https://github.com/crypto-nidh/hazel-cli.git
 cd hazel-cli
 
 # Option B: Download and extract ZIP, then

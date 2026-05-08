@@ -550,4 +550,4 @@ MIT — free for personal and commercial use.
 
 ---
 
-*Built with 🌿 by Hazel CLI*
+*Built with 🌿 by Hazel CLI* by Nidhi Kathayat

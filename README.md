@@ -1,7 +1,7 @@
 # 🌿 Hazel CLI v2.0
 
 > **AI-Powered Cybersecurity Terminal Assistant**
-> *Smart wrapper for your Linux terminal — built for pentesters & CTF players*
+> *Smart wrapper for your Linux terminal built for pentesters & CTF players*
 
 ---
 
